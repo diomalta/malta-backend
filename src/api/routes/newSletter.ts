@@ -4,6 +4,7 @@ import { celebrate, Joi } from 'celebrate';
 
 import NewSletterService from '../../services/newSletter';
 import { INewSletterInputDTO } from '../../interfaces/INewSletter';
+import logger from '../../loaders/logger';
 
 const route = Router();
 
@@ -18,7 +19,6 @@ export default (app: Router) => {
       }),
     }),
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling newSletter store endpoint with body: %o ', req.body);
 
       try {

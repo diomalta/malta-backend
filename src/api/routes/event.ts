@@ -4,6 +4,7 @@ import { celebrate, Joi } from 'celebrate';
 
 import EventService from '../../services/event';
 import { IEventInputDTO } from '../../interfaces/IEvent';
+import logger from '../../loaders/logger';
 
 const route = Router();
 
@@ -29,7 +30,6 @@ export default (app: Router) => {
       }),
     }),
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling event store endpoint with body: %o ', req.body);
 
       try {
@@ -62,7 +62,6 @@ export default (app: Router) => {
       }),
     }),
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling event update endpoint with body: %o ', req.body);
 
       try {
@@ -77,7 +76,6 @@ export default (app: Router) => {
   );
 
   route.get('/all', async (req: Request, res: Response, next: NextFunction) => {
-    const logger = Container.get('logger');
     logger.debug('Calling event get all endpoint');
 
     try {
@@ -91,7 +89,6 @@ export default (app: Router) => {
   });
 
   route.get('/month', async (req: Request, res: Response, next: NextFunction) => {
-    const logger = Container.get('logger');
     logger.debug('Calling event get all endpoint');
 
     try {
@@ -105,12 +102,11 @@ export default (app: Router) => {
   });
 
   route.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
-    const logger = Container.get('logger');
     logger.debug('Calling event get one endpoint');
 
     try {
       const eventServiceInstance = Container.get(EventService);
-      const { event } = await eventServiceInstance.Get();
+      const { event } = await eventServiceInstance.Get(req.params.id);
       return res.json({ event }).status(200);
     } catch (e) {
       logger.error('🔥 error: %o', e);

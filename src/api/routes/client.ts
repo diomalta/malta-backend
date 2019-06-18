@@ -5,6 +5,7 @@ import { celebrate, Joi } from 'celebrate';
 import ClientService from '../../services/client';
 import { IClientInputDTO } from '../../interfaces/IClient';
 import middlewares from '../middlewares';
+import logger from '../../loaders/logger';
 
 const route = Router();
 
@@ -27,7 +28,6 @@ export default (app: Router) => {
       }),
     }),
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling client store endpoint with body: %o ', req.body);
 
       try {
@@ -55,7 +55,6 @@ export default (app: Router) => {
       }),
     }),
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling client update endpoint with body: %o ', req.body);
 
       try {
@@ -75,7 +74,6 @@ export default (app: Router) => {
     // middlewares.isAuth,
     // middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling client get all endpoint');
 
       try {
@@ -94,7 +92,6 @@ export default (app: Router) => {
     // middlewares.isAuth,
     // middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling client get one endpoint');
 
       try {

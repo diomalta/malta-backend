@@ -5,6 +5,7 @@ import { celebrate, Joi } from 'celebrate';
 import EmployeeService from '../../services/employee';
 import { IEmployeeInputDTO } from '../../interfaces/IEmployee';
 import middlewares from '../middlewares';
+import logger from '../../loaders/logger';
 
 const route = Router();
 
@@ -27,7 +28,6 @@ export default (app: Router) => {
       }),
     }),
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling employee store endpoint with body: %o ', req.body);
 
       try {
@@ -57,7 +57,6 @@ export default (app: Router) => {
       }),
     }),
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling employee update endpoint with body: %o ', req.body);
 
       try {
@@ -76,7 +75,6 @@ export default (app: Router) => {
     // middlewares.isAuth,
     // middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling employee get all endpoint');
 
       try {
@@ -95,7 +93,6 @@ export default (app: Router) => {
     // middlewares.isAuth,
     // middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger = Container.get('logger');
       logger.debug('Calling employee get one endpoint');
 
       try {
