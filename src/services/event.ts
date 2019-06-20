@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
 import MailerService from './mailer';
 import { IEvent, IEventInputDTO } from '../interfaces/IEvent';
+import throwError from '../utils/thowError';
 
 @Service()
 export default class EventService {
