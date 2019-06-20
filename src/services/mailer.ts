@@ -1,5 +1,6 @@
 import { Service } from 'typedi';
 import { IUser } from '../interfaces/IUser';
+import throwError from '../utils/thowError';
 
 @Service()
 export default class MailerService {
@@ -11,7 +12,7 @@ export default class MailerService {
   }
   public StartEmailSequence(sequence: string, user: Partial<IUser>) {
     if (!user.email) {
-      throw new Error('No email provided');
+      throwError('No email provided');
     }
     // @TODO Add example of an email sequence implementation
     // Something like

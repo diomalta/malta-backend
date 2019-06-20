@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose';
 const Event = new mongoose.Schema(
   {
     client: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Client',
       require: true,
     },

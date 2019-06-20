@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
 import MailerService from './mailer';
 import { IClient, IClientInputDTO } from '../interfaces/IClient';
+import throwError from '../utils/thowError';
 
 @Service()
 export default class ClientService {
@@ -16,7 +17,7 @@ export default class ClientService {
       const clientRecord = await this.clientModel.create({ ...clientInputDTO });
 
       if (!clientRecord) {
-        throw new Error('Client cannot be created');
+        throwError('Client cannot be created');
       }
 
       this.logger.silly('Sending welcome email');
@@ -37,7 +38,7 @@ export default class ClientService {
       const client = await this.clientModel.findById(_id);
 
       if (!client) {
-        throw new Error('Client cannot be updated');
+        throwError('Client cannot be updated');
       }
 
       await client.update({ ...clientInputDTO });
@@ -57,7 +58,7 @@ export default class ClientService {
       const client = await this.clientModel.findById(id);
 
       if (!client) {
-        throw new Error('Client not found');
+        throwError('Client not found');
       }
 
       return client;
@@ -73,7 +74,7 @@ export default class ClientService {
       const clients = await this.clientModel.find();
 
       if (clients.length < 1) {
-        throw new Error('Client not found');
+        throwError('Client not found');
       }
 
       return clients;

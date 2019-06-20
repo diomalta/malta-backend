@@ -14,8 +14,8 @@ export default (app: Router) => {
 
   route.post(
     '/',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
@@ -33,7 +33,7 @@ export default (app: Router) => {
       try {
         const clientServiceInstance = Container.get(ClientService);
         const { client } = await clientServiceInstance.Register(req.body as IClientInputDTO);
-        return res.json({ client }).status(201);
+        return res.status(201).json({ client });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
@@ -43,13 +43,15 @@ export default (app: Router) => {
 
   route.put(
     '/:id',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
         email: Joi.string().required(),
-        contato: Joi.array().required(),
+        telefone: Joi.string().required(),
+        celular: Joi.string(),
+        contato: Joi.string(),
         dataNascimento: Joi.date(),
         anotacao: Joi.string(),
       }),
@@ -61,7 +63,7 @@ export default (app: Router) => {
         const { id } = req.params;
         const clientServiceInstance = Container.get(ClientService);
         const { client } = await clientServiceInstance.Update(id, req.body as IClientInputDTO);
-        return res.json({ client }).status(200);
+        return res.json({ client });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
@@ -71,15 +73,15 @@ export default (app: Router) => {
 
   route.get(
     '/all',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
       logger.debug('Calling client get all endpoint');
 
       try {
         const clientServiceInstance = Container.get(ClientService);
         const clients = await clientServiceInstance.GetAll();
-        return res.json({ clients }).status(200);
+        return res.status(200).json({ clients });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
@@ -89,15 +91,15 @@ export default (app: Router) => {
 
   route.get(
     '/:id',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
       logger.debug('Calling client get one endpoint');
 
       try {
         const clientServiceInstance = Container.get(ClientService);
         const client = await clientServiceInstance.Get(req.params.id);
-        return res.json({ client }).status(200);
+        return res.status(200).json({ client });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

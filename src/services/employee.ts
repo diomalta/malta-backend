@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
 import MailerService from './mailer';
 import { IEmployee, IEmployeeInputDTO } from '../interfaces/IEmployee';
+import throwError from '../utils/thowError';
 
 @Service()
 export default class EmployeeService {
@@ -16,7 +17,7 @@ export default class EmployeeService {
       const employeeRecord = await this.employeeModel.create({ ...employeeInputDTO });
 
       if (!employeeRecord) {
-        throw new Error('Employee cannot be created');
+        throwError('Employee cannot be created');
       }
 
       this.logger.silly('Sending welcome email');
@@ -37,7 +38,7 @@ export default class EmployeeService {
       const employee = await this.employeeModel.findById(id);
 
       if (!employee) {
-        throw new Error('Employee cannot be found');
+        throwError('Employee cannot be found');
       }
 
       await employee.update({ ...employeeInputDTO });
@@ -56,7 +57,7 @@ export default class EmployeeService {
       const employees = await this.employeeModel.find();
 
       if (employees.length < 1) {
-        throw new Error('Employees cannot be founded');
+        throwError('Employees cannot be founded');
       }
 
       return employees;
@@ -72,7 +73,7 @@ export default class EmployeeService {
       const employee = await this.employeeModel.findById(id);
 
       if (!employee) {
-        throw new Error('Employee cannot be founded');
+        throwError('Employee cannot be founded');
       }
 
       return employee;

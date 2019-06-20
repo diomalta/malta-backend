@@ -5,6 +5,7 @@ import config from '../config';
 import * as argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
+import throwError from '../utils/thowError';
 
 @Service()
 export default class AuthService {
@@ -30,7 +31,7 @@ export default class AuthService {
       const token = this.generateToken(userRecord);
 
       if (!userRecord) {
-        throw new Error('User cannot be created');
+        throwError('User cannot be created');
       }
       this.logger.silly('Sending welcome email');
       await this.mailer.SendWelcomeEmail(userRecord);
@@ -54,7 +55,7 @@ export default class AuthService {
   public async SignIn(email: string, password: string): Promise<{ user: IUser; token: string }> {
     const userRecord = await this.userModel.findOne({ email });
     if (!userRecord) {
-      throw new Error('User not registered');
+      throwError('User not registered');
     }
     /**
      * We use verify from argon2 to prevent 'timing based' attacks
@@ -74,7 +75,7 @@ export default class AuthService {
        */
       return { user, token };
     } else {
-      throw new Error('Invalid Password');
+      throwError('Invalid Password');
     }
   }
 

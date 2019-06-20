@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
 import MailerService from './mailer';
 import { INewSletter, INewSletterInputDTO } from '../interfaces/INewSletter';
+import throwError from '../utils/thowError';
 
 @Service()
 export default class NewSletterService {
@@ -16,7 +17,7 @@ export default class NewSletterService {
       const newSletterRecord = await this.newSletterModel.create({ ...newSletterInputDTO });
 
       if (!newSletterRecord) {
-        throw new Error('NewSletter cannot be created');
+        throwError('NewSletter cannot be created');
       }
 
       this.logger.silly('Sending welcome email');

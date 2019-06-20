@@ -14,15 +14,15 @@ export default (app: Router) => {
 
   route.post(
     '/',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
         email: Joi.string().required(),
-        contato: Joi.string().required(),
         telefone: Joi.string().required(),
-        celular: Joi.string().required(),
+        contato: Joi.string(),
+        celular: Joi.string(),
         cargo: Joi.string().required(),
         diaria: Joi.number().required(),
       }),
@@ -33,7 +33,7 @@ export default (app: Router) => {
       try {
         const employeeServiceInstance = Container.get(EmployeeService);
         const { employee } = await employeeServiceInstance.Register(req.body as IEmployeeInputDTO);
-        return res.json({ employee }).status(201);
+        return res.status(201).json({ employee });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
@@ -43,15 +43,15 @@ export default (app: Router) => {
 
   route.put(
     '/:id',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
         email: Joi.string().required(),
-        contato: Joi.string().required(),
         telefone: Joi.string().required(),
-        celular: Joi.string().required(),
+        contato: Joi.string(),
+        celular: Joi.string(),
         cargo: Joi.string().required(),
         diaria: Joi.number().required(),
       }),
@@ -72,8 +72,8 @@ export default (app: Router) => {
 
   route.get(
     '/all',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
       logger.debug('Calling employee get all endpoint');
 
@@ -90,8 +90,8 @@ export default (app: Router) => {
 
   route.get(
     '/:id',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
       logger.debug('Calling employee get one endpoint');
 

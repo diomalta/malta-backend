@@ -5,6 +5,7 @@ import { celebrate, Joi } from 'celebrate';
 import EventService from '../../services/event';
 import { IEventInputDTO } from '../../interfaces/IEvent';
 import logger from '../../loaders/logger';
+import middlewares from '../middlewares';
 
 const route = Router();
 
@@ -13,6 +14,8 @@ export default (app: Router) => {
 
   route.post(
     '/',
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         client: Joi.string().required(),
@@ -35,7 +38,7 @@ export default (app: Router) => {
       try {
         const eventServiceInstance = Container.get(EventService);
         const { event } = await eventServiceInstance.Register(req.body as IEventInputDTO);
-        return res.json({ event }).status(201);
+        return res.status(201).json({ event });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
@@ -45,6 +48,8 @@ export default (app: Router) => {
 
   route.put(
     '/:id',
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         client: Joi.string().required(),
@@ -75,18 +80,23 @@ export default (app: Router) => {
     },
   );
 
-  route.get('/all', async (req: Request, res: Response, next: NextFunction) => {
-    logger.debug('Calling event get all endpoint');
+  route.get(
+    '/all',
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
+    async (req: Request, res: Response, next: NextFunction) => {
+      logger.debug('Calling event get all endpoint');
 
-    try {
-      const eventServiceInstance = Container.get(EventService);
-      const event = await eventServiceInstance.GetAll();
-      return res.json({ event }).status(200);
-    } catch (e) {
-      logger.error('🔥 error: %o', e);
-      return next(e);
-    }
-  });
+      try {
+        const eventServiceInstance = Container.get(EventService);
+        const event = await eventServiceInstance.GetAll();
+        return res.json({ event }).status(200);
+      } catch (e) {
+        logger.error('🔥 error: %o', e);
+        return next(e);
+      }
+    },
+  );
 
   route.get('/month', async (req: Request, res: Response, next: NextFunction) => {
     logger.debug('Calling event get all endpoint');
@@ -101,16 +111,21 @@ export default (app: Router) => {
     }
   });
 
-  route.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
-    logger.debug('Calling event get one endpoint');
+  route.get(
+    '/:id',
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
+    async (req: Request, res: Response, next: NextFunction) => {
+      logger.debug('Calling event get one endpoint');
 
-    try {
-      const eventServiceInstance = Container.get(EventService);
-      const { event } = await eventServiceInstance.Get(req.params.id);
-      return res.json({ event }).status(200);
-    } catch (e) {
-      logger.error('🔥 error: %o', e);
-      return next(e);
-    }
-  });
+      try {
+        const eventServiceInstance = Container.get(EventService);
+        const { event } = await eventServiceInstance.Get(req.params.id);
+        return res.json({ event }).status(200);
+      } catch (e) {
+        logger.error('🔥 error: %o', e);
+        return next(e);
+      }
+    },
+  );
 };
