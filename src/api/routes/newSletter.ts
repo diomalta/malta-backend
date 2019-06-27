@@ -13,7 +13,7 @@ export default (app: Router) => {
   app.use('/newSletters', route);
 
   route.post(
-    '/store',
+    '/',
     middlewares.isAuth,
     middlewares.attachCurrentUser,
     celebrate({
@@ -28,6 +28,24 @@ export default (app: Router) => {
         const authServiceInstance = Container.get(NewSletterService);
         const { newSletter } = await authServiceInstance.Register(req.body as INewSletterInputDTO);
         return res.status(201).json({ newSletter });
+      } catch (e) {
+        logger.error('🔥 error: %o', e);
+        return next(e);
+      }
+    },
+  );
+
+  route.get(
+    '/all',
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
+    async (req: Request, res: Response, next: NextFunction) => {
+      logger.debug('Calling newSletter get all');
+
+      try {
+        const authServiceInstance = Container.get(NewSletterService);
+        const newSletter = await authServiceInstance.GetAll();
+        return res.status(200).json({ newSletter });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

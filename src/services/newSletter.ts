@@ -31,4 +31,20 @@ export default class NewSletterService {
       throw e;
     }
   }
+
+  public async GetAll(): Promise<[{ newSletter: INewSletter }]> {
+    try {
+      this.logger.silly('Get all newSletters db');
+      const newSletter = await this.newSletterModel.find();
+
+      if (newSletter.length < 1) {
+        throwError('Event cannot be take');
+      }
+
+      return newSletter;
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
 }
