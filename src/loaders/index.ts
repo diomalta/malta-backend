@@ -1,7 +1,9 @@
+import { Container } from 'typedi';
 import expressLoader from './express';
 import dependencyInjectorLoader from './dependencyInjector';
 import mongooseLoader from './mongoose';
 import jobsLoader from './jobs';
+import mailer from './mailer';
 import Logger from './logger';
 
 export default async ({ expressApp }) => {
@@ -41,6 +43,8 @@ export default async ({ expressApp }) => {
 
   await jobsLoader({ agenda });
   Logger.info('✌️ Jobs loaded');
+
+  mailer;
 
   await expressLoader({ app: expressApp });
   Logger.info('✌️ Express loaded');

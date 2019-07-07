@@ -1,9 +1,27 @@
-import { Service } from 'typedi';
+import { Service, Inject } from 'typedi';
 import { IUser } from '../interfaces/IUser';
+import { IClientInputDTO } from '../interfaces/IClient';
 import throwError from '../utils/thowError';
+import Mailer from '../loaders/mailer';
 
 @Service()
 export default class MailerService {
+  constructor(@Inject('logger') private logger) {}
+  public SendWelcomeEmailClient(client: IClientInputDTO) {
+    Mailer.to = client.email;
+    Mailer.subject = `Buffet Malta - Seja bem-vindo ${client.name}`;
+    Mailer.template = 'client/register';
+    Mailer.context = {
+      name: client.name,
+      email: client.email,
+      telefone: client.telefone,
+      celular: client.celular,
+      contato: client.contato,
+    };
+
+    Mailer.sendMail();
+    return { delivered: 1, status: 'ok' };
+  }
   public SendWelcomeEmail(user: Partial<IUser>) {
     /**
      * @TODO Call Mailchimp/Sendgrid or whatever
