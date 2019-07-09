@@ -11,11 +11,11 @@ const route = Router();
 
 export default (app: Router) => {
   app.use('/clients', route);
-  // a
+
   route.post(
     '/',
-    middlewares.isAuth,
-    middlewares.attachCurrentUser,
+    // middlewares.isAuth,
+    // middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),

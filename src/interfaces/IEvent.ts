@@ -13,6 +13,7 @@ export interface IEvent {
   indicadoPor: string;
   equipe: any[];
   observacao: string;
+  endereco: string;
 }
 
 export interface IEventInputDTO {
@@ -28,5 +29,6 @@ export interface IEventInputDTO {
   indicadoPor: string;
   equipe: any[];
   observacao: string;
+  endereco: string;
   status: string;
 }

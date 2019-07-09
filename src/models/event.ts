@@ -23,6 +23,7 @@ const Event = new mongoose.Schema(
     indicadoPor: String,
     equipe: [],
     observacao: String,
+    endereco: String,
     role: {
       type: String,
       default: 'Event',

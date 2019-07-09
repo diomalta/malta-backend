@@ -14,8 +14,8 @@ export default (app: Router) => {
 
   route.post(
     '/',
-    middlewares.isAuth,
-    middlewares.attachCurrentUser,
+    // middlewares.isAuth,
+    // middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         client: Joi.string().required(),
@@ -30,6 +30,7 @@ export default (app: Router) => {
         tipoEvento: Joi.string(),
         indicadoPor: Joi.string(),
         observacao: Joi.string(),
+        endereco: Joi.string(),
       }),
     }),
     async (req: Request, res: Response, next: NextFunction) => {

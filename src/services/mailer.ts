@@ -1,12 +1,38 @@
 import { Service, Inject } from 'typedi';
+import { format } from 'date-fns';
+
 import { IUser } from '../interfaces/IUser';
+import { IEventInputDTO } from '../interfaces/IEvent';
 import { IClientInputDTO } from '../interfaces/IClient';
 import throwError from '../utils/thowError';
+import decimal from '../utils/decimal';
 import Mailer from '../loaders/mailer';
 
 @Service()
 export default class MailerService {
   constructor(@Inject('logger') private logger) {}
+  public SendRegisterEvent(event: IEventInputDTO, client: IClientInputDTO) {
+    Mailer.to = client.email;
+    Mailer.subject = `Buffet Malta - Evento do dia ${format(new Date(event.data), 'DD/MM/YYYY')}`;
+    Mailer.template = 'event/register';
+    Mailer.context = {
+      name: client.name,
+      data: format(new Date(event.data), 'DD/MM/YYYY'),
+      status: event.status,
+      convidados: event.convidados,
+      valorPessoa: decimal(event.valorUnitario),
+      localEvento: event.endereco,
+      horaInicio: event.horaInicio,
+      buffetValor: decimal(event.convidados * event.valorUnitario),
+      taxa: decimal(event.taxaDeslocamento),
+      valorTotal: decimal(event.convidados * event.valorUnitario + event.taxaDeslocamento),
+      observacao: event.observacao,
+      metadeValor: decimal((event.convidados * event.valorUnitario + event.taxaDeslocamento) / 2),
+    };
+
+    Mailer.sendMail();
+    return { delivered: 1, status: 'ok' };
+  }
   public SendWelcomeEmailClient(client: IClientInputDTO) {
     Mailer.to = client.email;
     Mailer.subject = `Buffet Malta - Seja bem-vindo ${client.name}`;

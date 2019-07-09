@@ -7,6 +7,7 @@ import throwError from '../utils/thowError';
 export default class EventService {
   constructor(
     @Inject('eventModel') private eventModel,
+    @Inject('clientModel') private clientModel,
     private mailer: MailerService,
     @Inject('logger') private logger,
   ) {}
@@ -19,11 +20,11 @@ export default class EventService {
       if (!eventRecord) {
         throwError('Event cannot be created');
       }
-
-      this.logger.silly('Sending welcome email');
-      await this.mailer.SendWelcomeEmail(eventRecord);
-
+      const client = (await this.clientModel.findById(eventInputDTO.client)).toObject();
       const event = eventRecord.toObject();
+
+      this.logger.silly('Sending confirmation email from event');
+      this.mailer.SendRegisterEvent(event, client);
 
       return { event };
     } catch (e) {
