@@ -21,7 +21,7 @@ export default class ClientService {
       }
 
       this.logger.silly('Sending welcome email');
-      this.mailer.SendWelcomeEmailClient(clientRecord);
+      // this.mailer.SendWelcomeEmailClient(clientRecord);
 
       const client = clientRecord.toObject();
 

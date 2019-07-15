@@ -71,15 +71,11 @@ export default class EventService {
   public async GetCurrentMonth(): Promise<[{ event: IEvent }]> {
     try {
       this.logger.silly('Get event db record');
-      const today = new Date();
-      today.setDate(today.getDate() + 30);
-      var todayString = today.toISOString().split('T')[0];
-
-      const event = await this.eventModel
-        .find({
-          data: { $gte: new Date(), $lt: new Date(todayString) },
-        })
-        .populate('client');
+      // const today = new Date();
+      // today.setDate(today.getDate() + 30);
+      // var todayString = today.toISOString().split('T')[0];
+      //  data: { $gte: new Date(), $lt: new Date(todayString) },
+      const event = await this.eventModel.find({}).populate('client');
 
       if (event.length < 1) {
         throwError('Event cannot be take');
