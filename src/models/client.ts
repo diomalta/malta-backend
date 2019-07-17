@@ -25,7 +25,10 @@ const Client = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    anotacao: String,
+    anotacao: {
+      type: String,
+      default: 'Nenhuma anotação foi feita...',
+    },
     role: {
       type: String,
       default: 'client',

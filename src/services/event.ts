@@ -20,11 +20,15 @@ export default class EventService {
       if (!eventRecord) {
         throwError('Event cannot be created');
       }
-      const client = (await this.clientModel.findById(eventInputDTO.client)).toObject();
+
+      const clientRecord = await this.clientModel.findById(eventInputDTO.client);
+      await clientRecord.update({ quntidadeEventos: clientRecord.quntidadeEventos + 1 });
+
       const event = eventRecord.toObject();
+      const client = clientRecord.toObject();
 
       this.logger.silly('Sending confirmation email from event');
-      this.mailer.SendRegisterEvent(event, client);
+      // this.mailer.SendRegisterEvent(event, client);
 
       return { event };
     } catch (e) {
@@ -71,11 +75,14 @@ export default class EventService {
   public async GetCurrentMonth(): Promise<[{ event: IEvent }]> {
     try {
       this.logger.silly('Get event db record');
-      // const today = new Date();
-      // today.setDate(today.getDate() + 30);
-      // var todayString = today.toISOString().split('T')[0];
-      //  data: { $gte: new Date(), $lt: new Date(todayString) },
-      const event = await this.eventModel.find({}).populate('client');
+      const today = new Date();
+      today.setDate(today.getDate() + 30);
+      var todayString = today.toISOString().split('T')[0];
+
+      const event = await this.eventModel
+        .find({ data: { $gte: new Date(), $lte: new Date(todayString) } })
+        .sort({ data: 1 })
+        .populate('client');
 
       if (event.length < 1) {
         throwError('Event cannot be take');
@@ -92,7 +99,10 @@ export default class EventService {
     try {
       this.logger.silly('Get event db record');
 
-      const event = await this.eventModel.find();
+      const event = await this.eventModel
+        .find({})
+        .sort({ data: 1 })
+        .populate('client');
 
       if (event.length < 1) {
         throwError('Event cannot be take');

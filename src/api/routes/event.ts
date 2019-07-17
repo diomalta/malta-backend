@@ -14,8 +14,8 @@ export default (app: Router) => {
 
   route.post(
     '/',
-    // middlewares.isAuth,
-    // middlewares.attachCurrentUser,
+    middlewares.isAuth,
+    middlewares.attachCurrentUser,
     celebrate({
       body: Joi.object({
         client: Joi.string().required(),

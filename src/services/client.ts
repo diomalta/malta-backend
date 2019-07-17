@@ -71,7 +71,10 @@ export default class ClientService {
   public async GetAll(): Promise<[{ client: IClient }]> {
     try {
       this.logger.silly('Get all clients');
-      const clients = await this.clientModel.find();
+      const clients = await this.clientModel
+        .find()
+        .sort({ createdAt: 1 })
+        .limit(50);
 
       if (clients.length < 1) {
         throwError('Client not found');
