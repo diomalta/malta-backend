@@ -27,7 +27,7 @@ export default class DashboardService {
         .find({
           data: { $gte: new Date(), $lte: new Date(todayString) },
         })
-        .sort({ data: 1 })
+        .sort({ data: -1 })
         .populate('client');
 
       if (events.length < 1) {

@@ -81,7 +81,7 @@ export default class EventService {
 
       const event = await this.eventModel
         .find({ data: { $gte: new Date(), $lte: new Date(todayString) } })
-        .sort({ data: 1 })
+        .sort({ data: -1 })
         .populate('client');
 
       if (event.length < 1) {
@@ -101,7 +101,7 @@ export default class EventService {
 
       const event = await this.eventModel
         .find({})
-        .sort({ data: 1 })
+        .sort({ data: -1 })
         .populate('client');
 
       if (event.length < 1) {
