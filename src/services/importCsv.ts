@@ -35,7 +35,7 @@ export default class ImportService {
             let client = await this.clientModel.findOne({ email });
             if (!client) {
               const [telefone, celular, contato] = !this.isBlank(row.contacts)
-                ? row.contacts.split('/').map((s: string) => this.removeBlank(s))
+                ? (row.contacts.split('/').map((s: string) => this.removeBlank(s)) as string[])
                 : [];
               client = (await clientServiceInstance.Register({
                 name: this.captalize(

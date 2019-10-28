@@ -6,7 +6,7 @@ export default async (): Promise<Db> => {
   const connection = await mongoose.connect(config.databaseURLMaster, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useUnifiedTopology: true,
+    // useUnifiedTopology: true,
   });
 
   return connection.connection.db;
