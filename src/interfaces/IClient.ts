@@ -7,7 +7,7 @@ export interface IClient {
   celular: string;
   contato: string;
   eventos: any[];
-  quntidadeEventos: number;
+  quantidadeEventos: number;
   anotacao: string;
 }
 

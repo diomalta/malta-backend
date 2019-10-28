@@ -16,6 +16,12 @@ const User = new mongoose.Schema(
       index: true,
     },
 
+    username: {
+      type: String,
+      unique: true,
+      index: true,
+    },
+
     password: String,
 
     salt: String,

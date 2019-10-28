@@ -22,10 +22,10 @@ export default class EventService {
       }
 
       const clientRecord = await this.clientModel.findById(eventInputDTO.client);
-      await clientRecord.update({ quntidadeEventos: clientRecord.quntidadeEventos + 1 });
+      await clientRecord.update({ quantidadeEventos: clientRecord.quantidadeEventos + 1 });
 
       const event = eventRecord.toObject();
-      const client = clientRecord.toObject();
+      // const client = clientRecord.toObject();
 
       this.logger.silly('Sending confirmation email from event');
       // this.mailer.SendRegisterEvent(event, client);

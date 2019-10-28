@@ -14,14 +14,17 @@ const Client = new mongoose.Schema(
       unique: true,
       index: true,
     },
-    dataNascimento: Date,
+    // dataNascimento: {
+    //   type: Date,
+    //   index: true,
+    // },
     telefone: String,
     celular: String,
     contato: String,
     eventos: {
       type: [],
     },
-    quntidadeEventos: {
+    quantidadeEventos: {
       type: Number,
       default: 0,
     },

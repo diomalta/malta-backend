@@ -19,20 +19,33 @@ export default class AuthService {
     try {
       const salt = randomBytes(32);
 
+      this.logger.silly('Check already exist email');
+      if (await this.userModel.findOne({ email: userInputDTO.email })) {
+        throwError('Email already exists');
+      }
+
+      this.logger.silly('Check already exist username');
+      if (await this.userModel.findOne({ username: userInputDTO.username })) {
+        throwError('Username already exists');
+      }
+
       this.logger.silly('Hashing password');
       const hashedPassword = await argon2.hash(userInputDTO.password, { salt });
+
       this.logger.silly('Creating user db record');
       const userRecord = await this.userModel.create({
         ...userInputDTO,
         salt: salt.toString('hex'),
         password: hashedPassword,
       });
+
       this.logger.silly('Generating JWT');
       const token = this.generateToken(userRecord);
 
       if (!userRecord) {
         throwError('User cannot be created');
       }
+
       this.logger.silly('Sending welcome email');
       await this.mailer.SendWelcomeEmail(userRecord);
 
@@ -45,6 +58,7 @@ export default class AuthService {
       const user = userRecord.toObject();
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
+
       return { user, token };
     } catch (e) {
       this.logger.error(e);
@@ -52,8 +66,12 @@ export default class AuthService {
     }
   }
 
-  public async SignIn(email: string, password: string): Promise<{ user: IUser; token: string }> {
-    const userRecord = await this.userModel.findOne({ email });
+  public async SignIn(emailOrUsername: string, password: string): Promise<{ user: IUser; token: string }> {
+    this.logger.silly('Checking email or username');
+    const userRecord = await this.userModel.findOne({
+      $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+    });
+
     if (!userRecord) {
       throwError('User not registered');
     }
