@@ -74,7 +74,7 @@ export default class ClientService {
       const clients = await this.clientModel
         .find()
         .sort({ createdAt: -1 })
-        .limit(50);
+        .limit(500);
 
       if (clients.length < 1) {
         throwError('Client not found');
