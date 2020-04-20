@@ -9,6 +9,7 @@ import dashboard from './routes/dashboard';
 import importCsv from './routes/importCsv';
 
 const app = Router();
+
 auth(app);
 user(app);
 client(app);

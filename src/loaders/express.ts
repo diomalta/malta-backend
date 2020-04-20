@@ -1,8 +1,13 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
+import { ApolloServer, gql } from 'apollo-server-express';
+import * as query from 'qs-middleware';
+
 import routes from '../api';
 import config from '../config';
+import Graphql from '../graphql';
+
 export default ({ app }: { app: express.Application }) => {
   /**
    * Health Check endpoints
@@ -11,6 +16,7 @@ export default ({ app }: { app: express.Application }) => {
   app.get('/status', (req, res) => {
     res.status(200).send('Server ON!');
   });
+
   app.head('/status', (req, res) => {
     res.status(200).end();
   });
@@ -34,6 +40,20 @@ export default ({ app }: { app: express.Application }) => {
 
   // Load API routes
   app.use(config.api.prefix, routes);
+
+  // Load API Graphql with apollo-server-express
+  const { typeDefs, resolvers } = Graphql();
+  const server = new ApolloServer({
+    typeDefs: gql`
+      ${typeDefs}
+    `,
+    resolvers,
+  });
+
+  const path = '/graphql';
+
+  app.use(query());
+  server.applyMiddleware({ app, path });
 
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {
