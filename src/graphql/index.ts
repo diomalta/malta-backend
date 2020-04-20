@@ -1,14 +1,22 @@
-export default (): { typeDefs: string[]; resolvers: any } => {
+import { gql } from 'apollo-server-express';
+
+export default (): { typeDefs: any; resolvers: any } => {
   const modules = [
     { dir: 'Users', filename: 'User' },
     // { dir: 'Users', filename: 'User' },
   ];
 
   const typeDefs = modules.map(
-    ({ dir, filename }) => `
+    ({ dir, filename }) =>
+      gql`
+        ${`
       ${require(`./${dir}/${filename}Type`).default}
       ${require(`./${dir}/${filename}Query`).default}
-    `,
+      ${require(`./${dir}/${filename}Mutation`).default}
+    `
+          .trim()
+          .replace(/\n/, '')}
+      `,
   );
 
   let resolvers = {};
@@ -18,7 +26,7 @@ export default (): { typeDefs: string[]; resolvers: any } => {
   });
 
   return {
-    typeDefs,
+    typeDefs: typeDefs[0],
     resolvers,
   };
 };
